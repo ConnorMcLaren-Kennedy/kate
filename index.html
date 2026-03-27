@@ -1777,6 +1777,17 @@ const quizQuestions = [
   }
 ];
 
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbw0z0gGFpO49AYyvvXrR6PUFAnEdvyOuXZ1mGHmS2c5gv1eJrJA70wJ78ayfd6ythNc/exec';
+
+function logResponse(type, question, answer) {
+  fetch(SHEET_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ type: type, question: question, answer: answer })
+  }).catch(() => {});
+}
+
 let quizStep = 0;
 const quizOverlay = document.getElementById('quiz-overlay');
 const quizBody = document.getElementById('quiz-body');
@@ -1795,6 +1806,7 @@ function showQuizQuestion() {
     btn.className = 'quiz-answer';
     btn.textContent = answer;
     btn.addEventListener('click', () => {
+      logResponse('quiz', q.q, answer);
       quizStep++;
       if (quizStep >= quizQuestions.length) {
         showQuizResult();
