@@ -208,51 +208,30 @@ header {
 }
 
 /* ================================================================
-   FILTER BAR
+   FUN FACT CARD
    ================================================================ */
-.filter-bar {
-  position: sticky;
-  top: 0;
-  z-index: 20;
-  display: flex;
-  gap: 8px;
-  padding: 12px 1rem;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  background: rgba(255, 182, 193, 0.88);
-  -webkit-backdrop-filter: blur(12px) saturate(1.3);
-  backdrop-filter: blur(12px) saturate(1.3);
-  border-bottom: 2px solid var(--barbie-hot);
-  justify-content: center;
-  flex-wrap: wrap;
-  scrollbar-width: none;
+.fun-fact-section {
+  position: relative;
+  z-index: 5;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem 2rem;
 }
-.filter-bar::-webkit-scrollbar { display: none; }
 
-.filter-pill {
-  flex-shrink: 0;
-  padding: 8px 18px;
-  border: 2px solid var(--barbie-hot);
-  border-radius: 99px;
-  background: rgba(255,255,255,0.6);
-  color: var(--barbie-magenta);
+.fun-fact-card {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 2rem 1.8rem;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #fff0f5, #ffe4e1);
+  border: 3px solid var(--barbie-hot);
+  box-shadow: 0 8px 40px rgba(255, 105, 180, 0.35);
+  text-align: center;
   font-family: 'Quicksand', sans-serif;
+  font-size: clamp(1.05rem, 3.5vw, 1.3rem);
   font-weight: 700;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  white-space: nowrap;
-  -webkit-tap-highlight-color: transparent;
-  user-select: none;
-}
-
-.filter-pill:hover { background: rgba(255,105,180,0.2); }
-
-.filter-pill.active {
-  background: var(--barbie-hot);
-  color: #fff;
-  border-color: var(--barbie-deep);
-  box-shadow: 0 2px 15px rgba(255,105,180,0.45);
+  color: var(--barbie-magenta);
+  line-height: 1.6;
 }
 
 /* ================================================================
@@ -267,33 +246,36 @@ header {
 }
 
 /* ================================================================
-   ARCHIVE LINK
+   DISCO MODE
    ================================================================ */
-.archive-link-section {
-  position: relative;
-  z-index: 5;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1rem 2rem;
-  text-align: center;
+@keyframes disco-bg {
+  0% { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(360deg); }
 }
 
-.archive-link {
-  display: inline-block;
-  font-family: 'Pacifico', 'Comic Sans MS', cursive;
-  font-size: clamp(1.3rem, 4vw, 2rem);
-  color: #fff;
-  background: linear-gradient(135deg, var(--barbie-hot), var(--barbie-deep));
-  padding: 0.75rem 2.5rem;
-  border-radius: 50px;
-  text-decoration: none;
-  box-shadow: 0 4px 20px var(--glow-pink);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+@keyframes disco-wobble {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(2deg); }
+  75% { transform: rotate(-2deg); }
 }
 
-.archive-link:hover {
-  transform: scale(1.05);
-  box-shadow: 0 6px 30px var(--glow-pink);
+body.disco-mode {
+  animation: disco-bg 2s linear infinite;
+}
+
+body.disco-mode .barbie-card {
+  animation: disco-wobble 0.5s ease-in-out infinite;
+}
+
+.disco-ball {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 3rem;
+  z-index: 9999;
+  pointer-events: none;
+  animation: disco-wobble 0.5s ease-in-out infinite;
 }
 
 /* ================================================================
@@ -1137,21 +1119,17 @@ header {
 </div>
 
 <!-- ============================================================
-     FILTER BAR
+     TODAY'S FUN FACT
      ============================================================ -->
-<div class="filter-bar" id="filter-bar" style="display:none;"></div>
+<section class="fun-fact-section">
+  <h2 class="category-title">✨ Today's Fun Fact ✨</h2>
+  <div class="fun-fact-card" id="fun-fact-card"></div>
+</section>
 
 <!-- ============================================================
      GALLERY
      ============================================================ -->
 <main class="gallery" id="gallery"></main>
-
-<!-- ============================================================
-     ARCHIVE LINK
-     ============================================================ -->
-<div class="archive-link-section">
-  <a href="archive.html" class="archive-link">Archive</a>
-</div>
 
 <!-- ============================================================
      LIGHTBOX
@@ -1182,43 +1160,39 @@ header {
   </div>
 </div>
 
-<!-- ============================================================
-     CONFETTI CANNON
-     ============================================================ -->
-<button class="confetti-btn" id="confetti-btn" aria-label="Confetti">&#x1F389;</button>
-
-<!-- ============================================================
-     MASCOT
-     ============================================================ -->
-<div class="mascot" id="mascot">&#x1F496;</div>
-
-<!-- ============================================================
-     FOOTER
-     ============================================================ -->
 <footer class="footer">
   <svg class="footer-wave" viewBox="0 0 1440 120" preserveAspectRatio="none">
     <path d="M0,90 C180,130 360,50 540,80 C720,110 900,30 1080,70 C1200,95 1360,55 1440,75 L1440,120 L0,120 Z" fill="currentColor"/>
   </svg>
-  <div class="footer-bg">
-    <button class="back-to-top" id="back-to-top" aria-label="Back to top">&#x2764;&#xFE0F;</button>
-  </div>
+  <div class="footer-bg"></div>
 </footer>
-
 
 <script>
 /* ================================================================
-   MEDIA CONFIG — CATEGORIZED
+   DAILY CONFIG — EDIT THIS SECTION EACH DAY
    ================================================================ */
+const DAILY_CONFIG = {
+  funFact: "The patent documentation for the fire hydrant was lost in a fire.",
+  quizQuestions: [
+    { q: "Where would you rather live?", a: ["Cotswolds", "The Middle of Australia", "Somewhere Really Bad"] },
+    { q: "Dream Holiday Destination?", a: ["Paris with a balcony overlooking the Eiffel Tower", "Somewhere shit"] },
+    { q: "Ideal Bedtime?", a: ["8pm", "6am", "I am fuelled by vibes and iced coffee"] },
+    { q: "How do you feel about the colour pink?", a: ["Love it", "Obsessed", "It\u2019s a lifestyle"] },
+    { q: "Rate this website:", a: ["Life-changing", "Even more life-changing", "I\u2019m not crying, you\u2019re crying"] },
+    { q: "Do you trust Connor\u2019s taste?", a: ["Absolutely", "With my life", "More than my own"] },
+  ],
+};
+
 const MEDIA_CONFIG = {
   siteTitle: "Connor's Show and Tell",
   categories: [
     {
-      id: "today",
-      name: "Today",
-      emoji: "\u2728",
+      id: "instagram",
+      name: "Connor gets 10 minutes of Instagram time a day. What did he find yesterday?",
+      emoji: "\uD83D\uDCF1",
       items: [
         { file: "media/27.03.1.mp4", type: "video" },
-        { file: "media/27.03.2.jpg", type: "image" },
+        { file: "media/27.03.2.mp4", type: "video" },
       ]
     },
   ]
@@ -1234,7 +1208,6 @@ const splash = document.getElementById('splash');
 const canvas = document.getElementById('particles');
 const ctx = canvas.getContext('2d');
 const galleryEl = document.getElementById('gallery');
-const filterBar = document.getElementById('filter-bar');
 const lightbox = document.getElementById('lightbox');
 const lightboxMedia = document.getElementById('lightbox-media');
 const lightboxClose = document.getElementById('lightbox-close');
@@ -1526,39 +1499,6 @@ function buildGallery() {
 buildGallery();
 
 /* ================================================================
-   FILTER BAR LOGIC
-   ================================================================ */
-filterBar.addEventListener('click', (e) => {
-  const pill = e.target.closest('.filter-pill');
-  if (!pill) return;
-
-  // Update active pill
-  filterBar.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
-  pill.classList.add('active');
-
-  const filter = pill.dataset.filter;
-  const sections = galleryEl.querySelectorAll('.category-section');
-
-  sections.forEach(sec => {
-    if (filter === 'all' || sec.dataset.category === filter) {
-      sec.classList.remove('hidden');
-      // Re-trigger entrance animation for cards that haven't been seen
-      sec.querySelectorAll('.barbie-card:not(.visible)').forEach(card => {
-        observer.observe(card);
-      });
-    } else {
-      sec.classList.add('hidden');
-    }
-  });
-
-  // Scroll to top of gallery when filtering
-  if (filter !== 'all') {
-    const target = galleryEl.querySelector('.category-section:not(.hidden)');
-    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-});
-
-/* ================================================================
    SCROLL-TRIGGERED CARD ENTRANCE
    ================================================================ */
 const observer = new IntersectionObserver((entries) => {
@@ -1740,42 +1680,11 @@ lightbox.addEventListener('touchend', (e) => {
   }, 30000);
 })();
 
-/* ================================================================
-   BACK TO TOP
-   ================================================================ */
-document.getElementById('back-to-top').addEventListener('click', () => {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-});
 
 /* ================================================================
    COMPATIBILITY QUIZ
    ================================================================ */
-const quizQuestions = [
-  {
-    q: "Where would you rather live?",
-    a: ["Cotswolds", "The Middle of Australia", "Somewhere Really Bad"]
-  },
-  {
-    q: "Dream Holiday Destination?",
-    a: ["Paris with a balcony overlooking the Eiffel Tower", "Somewhere shit"]
-  },
-  {
-    q: "Ideal Bedtime?",
-    a: ["8pm", "6am", "I am fuelled by vibes and iced coffee"]
-  },
-  {
-    q: "How do you feel about the colour pink?",
-    a: ["Love it", "Obsessed", "It\u2019s a lifestyle"]
-  },
-  {
-    q: "Rate this website:",
-    a: ["Life-changing", "Even more life-changing", "I\u2019m not crying, you\u2019re crying"]
-  },
-  {
-    q: "Do you trust Connor\u2019s taste?",
-    a: ["Absolutely", "With my life", "More than my own"]
-  }
-];
+const quizQuestions = DAILY_CONFIG.quizQuestions;
 
 const SHEET_URL = 'https://script.google.com/macros/s/AKfycbw0z0gGFpO49AYyvvXrR6PUFAnEdvyOuXZ1mGHmS2c5gv1eJrJA70wJ78ayfd6ythNc/exec';
 
@@ -1870,39 +1779,104 @@ function fireConfetti() {
   }
 }
 
-document.getElementById('confetti-btn').addEventListener('click', fireConfetti);
 
 /* ================================================================
-   MASCOT
+   FUN FACT CARD
    ================================================================ */
-const mascot = document.getElementById('mascot');
-let scrollTimer = null;
+document.getElementById('fun-fact-card').textContent = DAILY_CONFIG.funFact;
 
-// Bounce on scroll
-window.addEventListener('scroll', () => {
-  if (!mascot.classList.contains('flip')) {
-    mascot.classList.remove('bounce');
-    void mascot.offsetWidth;
-    mascot.classList.add('bounce');
-    clearTimeout(scrollTimer);
-    scrollTimer = setTimeout(() => mascot.classList.remove('bounce'), 500);
+
+/* ================================================================
+   SHAKE TO CONFETTI (Mobile)
+   ================================================================ */
+(function initShakeConfetti() {
+  let lastShake = 0;
+  const SHAKE_THRESHOLD = 25;
+  const COOLDOWN = 2000;
+  let lastX = null, lastY = null, lastZ = null;
+
+  function handleMotion(e) {
+    const acc = e.accelerationIncludingGravity;
+    if (!acc) return;
+
+    if (lastX !== null) {
+      const dx = Math.abs(acc.x - lastX);
+      const dy = Math.abs(acc.y - lastY);
+      const dz = Math.abs(acc.z - lastZ);
+      const total = dx + dy + dz;
+
+      if (total > SHAKE_THRESHOLD && Date.now() - lastShake > COOLDOWN) {
+        lastShake = Date.now();
+        fireConfetti();
+      }
+    }
+    lastX = acc.x;
+    lastY = acc.y;
+    lastZ = acc.z;
   }
-}, { passive: true });
 
-// Flip on like
-galleryEl.addEventListener('click', (e) => {
-  if (e.target.closest('.like-btn')) {
-    mascot.classList.remove('bounce');
-    mascot.classList.add('flip');
-    setTimeout(() => mascot.classList.remove('flip'), 650);
+  // iOS 13+ requires permission
+  if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
+    // Request permission on first user interaction
+    document.addEventListener('click', function requestMotion() {
+      DeviceMotionEvent.requestPermission().then(state => {
+        if (state === 'granted') window.addEventListener('devicemotion', handleMotion);
+      }).catch(() => {});
+      document.removeEventListener('click', requestMotion);
+    }, { once: true });
+  } else if (typeof DeviceMotionEvent !== 'undefined') {
+    window.addEventListener('devicemotion', handleMotion);
   }
-});
+})();
 
-// Heart burst on mascot tap
-mascot.addEventListener('click', () => {
-  const rect = mascot.getBoundingClientRect();
-  spawnHeartBurst(rect.left + rect.width / 2, rect.top + rect.height / 2);
-});
+/* ================================================================
+   DISCO MODE (Easter Egg — triple-tap title)
+   ================================================================ */
+(function initDiscoMode() {
+  const titleEl = document.querySelector('.site-title');
+  let tapCount = 0;
+  let tapTimer = null;
+  let discoActive = false;
+  let discoTimeout = null;
+  let discoBall = null;
+
+  function activateDisco() {
+    discoActive = true;
+    document.body.classList.add('disco-mode');
+
+    // Add disco ball emoji
+    discoBall = document.createElement('div');
+    discoBall.className = 'disco-ball';
+    discoBall.textContent = '🪩';
+    document.body.appendChild(discoBall);
+
+    fireConfetti();
+
+    // Auto-deactivate after 10 seconds
+    discoTimeout = setTimeout(deactivateDisco, 10000);
+  }
+
+  function deactivateDisco() {
+    discoActive = false;
+    document.body.classList.remove('disco-mode');
+    if (discoBall) { discoBall.remove(); discoBall = null; }
+    if (discoTimeout) { clearTimeout(discoTimeout); discoTimeout = null; }
+  }
+
+  if (titleEl) {
+    titleEl.addEventListener('click', () => {
+      tapCount++;
+      clearTimeout(tapTimer);
+      tapTimer = setTimeout(() => { tapCount = 0; }, 600);
+
+      if (tapCount >= 3) {
+        tapCount = 0;
+        if (discoActive) deactivateDisco();
+        else activateDisco();
+      }
+    });
+  }
+})();
 </script>
 
 </body>
