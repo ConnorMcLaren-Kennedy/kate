@@ -1697,6 +1697,9 @@ function logResponse(type, question, answer) {
   }).catch(() => {});
 }
 
+// Log page visit
+logResponse('visit', 'Page opened', new Date().toLocaleString());
+
 let quizStep = 0;
 const quizOverlay = document.getElementById('quiz-overlay');
 const quizBody = document.getElementById('quiz-body');
