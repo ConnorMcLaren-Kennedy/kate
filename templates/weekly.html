@@ -430,22 +430,6 @@ body.disco-mode .barbie-card {
   .category-grid { grid-template-columns: repeat(3, 1fr); gap: 2rem; }
 }
 
-.category-empty {
-  max-width: 500px;
-  margin: 1rem auto 0;
-  padding: 1.5rem 1.8rem;
-  border-radius: 20px;
-  background: linear-gradient(135deg, #fff0f5, #ffe4e1);
-  border: 3px solid var(--barbie-hot);
-  box-shadow: 0 8px 40px rgba(255, 105, 180, 0.35);
-  text-align: center;
-  font-family: 'Quicksand', sans-serif;
-  font-size: clamp(1rem, 3.5vw, 1.2rem);
-  font-weight: 600;
-  color: var(--barbie-magenta);
-  line-height: 1.6;
-}
-
 /* ================================================================
    CARDS
    ================================================================ */
@@ -1271,8 +1255,8 @@ body.disco-mode .barbie-card {
     </div>
     <div class="quiz-result" id="quiz-result">
       <div class="quiz-result-names">Connor &amp; Kate</div>
-      <div class="quiz-result-pct">100% compatible 🔥</div>
-      <div class="quiz-result-label">Two 100% compatible results in a row? This is unheard of. The experts at connormakescalculators.com have never seen such high figures.</div>
+      <div class="quiz-result-pct">100%</div>
+      <div class="quiz-result-label">LOOK HOW COMPATIBLE WE ARE I CAN'T BELIEVE IT WENT UP!</div>
       <button class="quiz-close" id="quiz-close">Close</button>
     </div>
   </div>
@@ -1340,19 +1324,30 @@ body.disco-mode .barbie-card {
    WEEKLY CONFIG — EDIT THIS SECTION EACH WEEK
    ================================================================ */
 const WEEKLY_CONFIG = {
-  funFact: "In the time between being discovered and being demoted from planet to dwarf planet, Pluto didn\u2019t even do one lap around the sun.",
+  funFact: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   quizQuestions: [
-    { q: "What do all my homies hate?", a: ["The dark", "Big lights", "Period pains"] },
-    { q: "What would you rather have in your ass?", a: ["A big, juicy cock", "A big, juicy stick of halloumi"] },
-    { q: "Who is coming to London with me on the 18th of July to watch the London Diamond League because I bought two tickets this morning after hearing Josh Kerr is going after the mile world record which has stood since the 1990s?", a: ["Me!", "This princess right here", "The coolest woman in all the lands"] },
+    { q: "Where would you rather live?", a: ["Cotswolds", "The Middle of Australia", "Somewhere Really Bad"] },
+    { q: "Dream Holiday Destination?", a: ["Paris with a balcony overlooking the Eiffel Tower", "Somewhere shit"] },
+    { q: "Ideal Bedtime?", a: ["8pm", "6am", "I am fuelled by vibes and iced coffee"] },
+    { q: "How do you feel about the colour pink?", a: ["Love it", "Obsessed", "It\u2019s a lifestyle"] },
+    { q: "Rate this website:", a: ["Life-changing", "Even more life-changing", "I\u2019m not crying, you\u2019re crying"] },
+    { q: "Do you trust Connor\u2019s taste?", a: ["Absolutely", "With my life", "More than my own"] },
   ],
   australiaEvents: [
-    { description: "Amid fuel price surges, many states have made all public transport free" },
-    { description: "A cyclone hit Western Australia, which destroyed a bunch of banana crops but made for some really cool photos that almost look fake" },
-    { media: { file: "media/cyclone.jpg", type: "image" } },
-    { description: "Australia got it\u2019s first snow of the year in the mountains!" },
-    { description: "In Australia, it\u2019s officially cheaper to buy an actual rabbit than a chocolate one this Easter" },
-    { description: "Sydney had a giant cake party for some reason" },
+    {
+      title: "Event Title Here",
+      description: "A short description of what happened this week...",
+      media: { file: "media/placeholder.jpg", type: "image" }
+    },
+    {
+      title: "Another Event",
+      description: "Description of the second event...",
+      media: { file: "media/placeholder.mp4", type: "video" }
+    },
+    {
+      title: "Text-Only Event",
+      description: "No media for this one, just what happened."
+    },
   ],
 };
 
@@ -1363,8 +1358,10 @@ const MEDIA_CONFIG = {
       id: "instagram",
       name: "Connor gets 10 minutes of Instagram time a day. What did he find this week?",
       emoji: "📱",
-      items: [],
-      fallbackText: "Nothing since the last update unfortunately :("
+      items: [
+        { file: "media/27.03.1.mp4", type: "video" },
+        { file: "media/27.03.2.jpg", type: "image" },
+      ]
     },
   ]
 };
@@ -1607,67 +1604,60 @@ function buildGallery() {
     const grid = document.createElement('div');
     grid.className = 'category-grid';
 
-    if (cat.items.length === 0 && cat.fallbackText) {
-      const msg = document.createElement('div');
-      msg.className = 'category-empty';
-      msg.textContent = cat.fallbackText;
-      section.appendChild(msg);
-    } else {
-      cat.items.forEach((item) => {
-        const idx = globalIndex++;
-        likes[idx] = { liked: false, count: 0 };
+    cat.items.forEach((item) => {
+      const idx = globalIndex++;
+      likes[idx] = { liked: false, count: 0 };
 
-        const card = document.createElement('div');
-        card.className = 'barbie-card';
-        card.dataset.index = idx;
+      const card = document.createElement('div');
+      card.className = 'barbie-card';
+      card.dataset.index = idx;
 
-        // Ribbon
-        const ribbon = document.createElement('div');
-        ribbon.className = 'card-ribbon';
-        ribbon.textContent = ribbons[idx % ribbons.length];
-        card.appendChild(ribbon);
+      // Ribbon
+      const ribbon = document.createElement('div');
+      ribbon.className = 'card-ribbon';
+      ribbon.textContent = ribbons[idx % ribbons.length];
+      card.appendChild(ribbon);
 
-        // Media
-        const mediaWrap = document.createElement('div');
-        mediaWrap.className = 'card-media';
+      // Media
+      const mediaWrap = document.createElement('div');
+      mediaWrap.className = 'card-media';
 
-        if (item.type === 'video') {
-          const video = document.createElement('video');
-          video.controls = true;
-          video.playsInline = true;
-          video.preload = 'metadata';
-          video.setAttribute('controlslist', 'nodownload');
-          const source = document.createElement('source');
-          source.src = encodeURI(item.file);
-          source.type = 'video/mp4';
-          video.appendChild(source);
-          mediaWrap.appendChild(video);
-        } else {
-          const img = document.createElement('img');
-          img.src = encodeURI(item.file);
-          img.alt = '';
-          img.loading = 'lazy';
-          img.decoding = 'async';
-          mediaWrap.appendChild(img);
-        }
-        card.appendChild(mediaWrap);
+      if (item.type === 'video') {
+        const video = document.createElement('video');
+        video.controls = true;
+        video.playsInline = true;
+        video.preload = 'metadata';
+        video.setAttribute('controlslist', 'nodownload');
+        const source = document.createElement('source');
+        source.src = encodeURI(item.file);
+        source.type = 'video/mp4';
+        video.appendChild(source);
+        mediaWrap.appendChild(video);
+      } else {
+        const img = document.createElement('img');
+        img.src = encodeURI(item.file);
+        img.alt = '';
+        img.loading = 'lazy';
+        img.decoding = 'async';
+        mediaWrap.appendChild(img);
+      }
+      card.appendChild(mediaWrap);
 
-        // Actions
-        const actions = document.createElement('div');
-        actions.className = 'card-actions';
+      // Actions
+      const actions = document.createElement('div');
+      actions.className = 'card-actions';
 
-        const likeBtn = document.createElement('button');
-        likeBtn.className = 'like-btn';
-        likeBtn.dataset.index = idx;
-        likeBtn.innerHTML = '<span class="heart-icon">\u2661</span><span class="like-count">0</span>';
-        actions.appendChild(likeBtn);
+      const likeBtn = document.createElement('button');
+      likeBtn.className = 'like-btn';
+      likeBtn.dataset.index = idx;
+      likeBtn.innerHTML = '<span class="heart-icon">\u2661</span><span class="like-count">0</span>';
+      actions.appendChild(likeBtn);
 
-        card.appendChild(actions);
-        grid.appendChild(card);
-      });
-      section.appendChild(grid);
-    }
+      card.appendChild(actions);
+      grid.appendChild(card);
+    });
 
+    section.appendChild(grid);
     galleryFrag.appendChild(section);
   });
 
