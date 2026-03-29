@@ -1941,12 +1941,17 @@ const quizQuestions = WEEKLY_CONFIG.quizQuestions;
 const SHEET_URL = 'https://script.google.com/macros/s/AKfycbw0z0gGFpO49AYyvvXrR6PUFAnEdvyOuXZ1mGHmS2c5gv1eJrJA70wJ78ayfd6ythNc/exec';
 
 function logResponse(type, question, answer) {
-  fetch(SHEET_URL, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ type: type, question: question, answer: answer })
-  }).catch(() => {});
+  var data = JSON.stringify({ type: type, question: question, answer: answer });
+  if (navigator.sendBeacon) {
+    navigator.sendBeacon(SHEET_URL, new Blob([data], { type: 'text/plain' }));
+  } else {
+    fetch(SHEET_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
+      body: data
+    }).catch(function() {});
+  }
 }
 
 // Log page visit with device info
