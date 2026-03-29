@@ -1949,8 +1949,22 @@ function logResponse(type, question, answer) {
   }).catch(() => {});
 }
 
-// Log page visit
-logResponse('visit', 'Page opened', new Date().toLocaleString());
+// Log page visit with device info
+(function logVisit() {
+  const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+  const info = [
+    'Device: ' + navigator.userAgent,
+    'Screen: ' + screen.width + 'x' + screen.height,
+    'Viewport: ' + window.innerWidth + 'x' + window.innerHeight,
+    'Pixel ratio: ' + window.devicePixelRatio,
+    'Language: ' + navigator.language,
+    'Timezone: ' + Intl.DateTimeFormat().resolvedOptions().timeZone,
+    'Touch: ' + ('ontouchstart' in window),
+    'Connection: ' + (conn ? conn.effectiveType : 'unknown'),
+    'Referrer: ' + (document.referrer || 'direct'),
+  ].join(' | ');
+  logResponse('visit', 'Page opened', info);
+})();
 
 let quizStep = 0;
 const quizOverlay = document.getElementById('quiz-overlay');
